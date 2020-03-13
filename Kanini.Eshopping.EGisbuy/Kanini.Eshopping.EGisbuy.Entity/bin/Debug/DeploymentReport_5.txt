@@ -1,0 +1,57 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [dbo].[DeliveryDetails] (Table)
+       [dbo].[Feedback] (Table)
+       [dbo].[OrderDetails] (Table)
+       [dbo].[Payment] (Table)
+       [dbo].[Product] (Table)
+       [dbo].[UserAddress] (Table)
+       [dbo].[UserRoles] (Table)
+       [dbo].[Users] (Table)
+       [dbo].[WishList] (Table)
+       [dbo].[FK_DeliveryDetails_Product] (Foreign Key)
+       [dbo].[FK_DeliveryDetails_OrderDetails] (Foreign Key)
+       [dbo].[FK_Feedback_Product] (Foreign Key)
+       [dbo].[FK_Feedback_Users] (Foreign Key)
+       [dbo].[FK_OrderDetails_Product] (Foreign Key)
+       [dbo].[FK_OrderDetails_Users] (Foreign Key)
+       [dbo].[FK_OrderDetails_Payment] (Foreign Key)
+       [dbo].[FK_UserAddress_Users] (Foreign Key)
+       [dbo].[FK_Users_UserRoles] (Foreign Key)
+       [dbo].[FK_WishList_Users] (Foreign Key)
+       [dbo].[FK_WishList_Product] (Foreign Key)
+       [dbo].[DeleteProductByAdmin] (Procedure)
+       [dbo].[DeleteUserIfNotActive] (Procedure)
+       [dbo].[InsertFeedbackAndIncreaseProductRatings] (Procedure)
+       [dbo].[InsertIntoWishList] (Procedure)
+       [dbo].[InsertOrderDetails] (Procedure)
+       [dbo].[InsertPayment] (Procedure)
+       [dbo].[InsertProductsByAdmin] (Procedure)
+       [dbo].[InsertUserAddress] (Procedure)
+       [dbo].[InsertUserRoles] (Procedure)
+       [dbo].[RegisterUserDetails] (Procedure)
+       [dbo].[SearchProduct] (Procedure)
+       [dbo].[UpdateDeliveryDetailsByAdmin] (Procedure)
+       [dbo].[UpdateProductRatingAndFeedbackByCustomer] (Procedure)
+       [dbo].[UpdateProductsByAdmin] (Procedure)
+       [dbo].[UpdateUserAddress] (Procedure)
+       [dbo].[ViewAdminDetails] (Procedure)
+       [dbo].[ViewCustomerDetailsByAdmin] (Procedure)
+       [dbo].[ViewDeliveryDetails] (Procedure)
+       [dbo].[ViewFeedbackDetailsByAdmin] (Procedure)
+       [dbo].[ViewOrderDetails] (Procedure)
+       [dbo].[ViewPaymentDetails] (Procedure)
+       [dbo].[ViewProducts] (Procedure)
+       [dbo].[ViewProductsOnWishList] (Procedure)
+
+** Supporting actions
