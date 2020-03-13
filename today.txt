@@ -1,0 +1,252 @@
+create database Eonline
+use Eonline
+
+---------------------------------UserRoles---------------------------------
+create table UserRoles(RoleId int identity(1,1)primary key,RoleDescription varchar(20),RoleNumber int,CreatedDate date,
+ModifiedDate date,RoleIsActive bit)
+--------------------------------Users------------------------------------
+create table Users(UserId int identity(1,1)primary key,Name varchar(30),MobileNumber varchar(15),DateOfBirth date,
+Gender varchar(10),EMailId varchar(30),Password varchar(20),RoleId int foreign key references UserRoles(RoleId),CreatedDate date,
+ModifiedDate date,UserIsActive bit)
+----------------------------------------BillingDetails--------------------
+create table BillingDetails(UserId int foreign key references Users(UserId),BillId int identity(1,1) primary key,
+Address1 varchar(100),Address2 varchar(100),City varchar(20),State varchar(30),Pincode varchar(20))
+---------------------------------------Product------------------------------------------------------------------
+create table Product(ProductId int identity(1,1) primary key,Name varchar(30),Rating decimal(2,1) check(Rating>=0 and Rating <=5),
+ManufactureDate date,CartDescription varchar(100),ShortDescription varchar(MAX),Image varchar(100),MRP decimal(10,2),
+DealPrice decimal(10,2),
+SavePrice decimal(10,2),NoOfStock int)
+----------------------------------------WishList----------------------------------------------------------------
+create table WishList(UserId int foreign key references Users(UserId),CartId int identity(1,1) primary key,
+ProductId int foreign key references Product(ProductId),DateOfCartAdd date)
+---------------------------------------OrderDetails-------------------------------------------------------------
+create table OrderDetails(OrderId int identity(1,1) primary key,ProductId int foreign key references Product(ProductId),
+UserId int foreign key references Users(UserId),OrderDate date,Quantity int,PaymentId int foreign key references Payment(PaymentId))
+--------------------------------------Payment-------------------------------------------------------------------
+create table Payment(PaymentId int identity(1,1) primary key,CardNumber varchar(20),ExpiryDate date,CVV int,PaymentMode varchar(20))
+-------------------------------------------DeliveryDetails------------------------------------------------------
+create table DeliveryDetails (DeliveryId int identity(1,1) primary key,ProductId int foreign key references Product(ProductId),
+OrderId int foreign key references OrderDetails(OrderId),DeliveryStatus varchar(20),DeliveryDate date)
+-----------------------select * from-------------------------------------------------------------------
+select * from UserRoles
+select * from Users
+select * from Product
+select * from WishList
+select * from BillingDetails
+select * from OrderDetails
+select * from Payment
+select * from DeliveryDetails
+-------------------------------------StoredProcedure for Customer-------------------------------------
+-------------------------------------1.Registration UserDetails--------------------------------
+alter procedure RegisterUserDetails(@Name varchar(30),
+@MobileNumber varchar(15),
+@DateOfBirth date,
+@Gender varchar(10),
+@EMailId varchar(30),
+@Password varchar(20),
+@RoleId int,
+@CreatedDate date,
+@ModifiedDate date,
+@UserIsActive bit)
+as
+begin 
+insert into Users values(@Name,@MobileNumber,@DateOfBirth,@Gender,@EMailId,@Password,@RoleId,@CreatedDate,@ModifiedDate 
+,@UserIsActive)
+end
+
+exec RegisterUserDetails 'lmno','8939887511','1997-07-11','Male','lmno429@gmail.com','BlackWhitwhityou',3
+,'2020-03-12','2020-03-12 ',1
+
+
+---------------------------------------InsertRole-----------------------------
+alter procedure InsertRoles(@RoleDescription varchar(20),@RoleNumber int,@CreatedDate date,
+@ModifiedDate date,@RoleIsActive bit)
+as
+begin
+insert into UserRoles values(@RoleDescription,@RoleNumber,GETDATE(),GETDATE(),@RoleIsActive)
+end
+insert into UserRoles values('Customer',2,GETDATE(),GETDATE(),0)
+----------------------------------------insertroles---------------------------
+insert into UserRoles values('Customer',2,GETDATE(),GETDATE(),1)
+insert into UserRoles values('Admin',1,GETDATE(),GETDATE(),1)
+----------------------------------------ADmin view CustomerDetails------------------------------
+alter procedure ViewCustomerDetails(@RoleNumber int)
+as
+begin
+select * from Users where RoleId in(select RoleId from UserRoles where @RoleNumber=RoleNumber)
+end
+
+exec ViewCustomerDetails 2
+-----------------------------------------Admin Viewing Admin Details----------------------------
+create procedure ViewAdminDetails(@RoleNumber int)
+as
+begin
+select * from Users where RoleId in(select RoleId from UserRoles where @RoleNumber=RoleNumber)
+end
+
+exec ViewCustomerDetails 1
+---------------------------------------------Admin InsertProducts--------------------------------
+create procedure InsertProductByAdmin(@Name varchar(30),@Rating decimal(2,1),
+@ManufactureDate date,@CartDescription varchar(100),
+@ShortDescription varchar(MAX),
+@Image varchar(100),
+@MRP decimal(10,2),
+@DealPrice decimal(10,2),
+@SavePrice decimal(10,2),
+@NoOfStock int)
+as 
+begin 
+insert into Product values(@Name,@Rating,@ManufactureDate,@CartDescription,@ShortDescription,@Image,@MRP,@DealPrice,@SavePrice,@NoOfStock)
+end
+
+exec InsertProductByAdmin 'SamsungM31','0.0','2019-12-12','Samsung Galaxy M31 (Ocean Blue, 6GB RAM, 128GB Storage)',
+'64MP + 8MP + 5MP + 5MP rear camera | 32MP front facing camera
+16.21 centimeters (6.4-inch) FHD+ capacitive touchscreen with 2340 x 1080 pixels resolution, 404 ppi pixel density and 16M color support
+Memory, Storage & SIM: 6GB RAM | 128GB storage expandable up to 512GB | Dual SIM with dual standby (4G+4G)
+Android v10.0 operating system with 2.3GHz + 1.7GHz Exynos 9611 Octa core processor
+6000mAH lithium-ion battery
+1 year manufacturer warranty for device and 6 months manufacturer warranty for in-box accessories including batteries from the date of purchase
+Box also includes: Travel Adapter, USB Cable, Ejection Pin, User Manual
+Fast face unlock and fingerprint sensor | Dual SIM (nano+nano) with dual standby and dual VoLTE , Dedicated Sim slot;Widevine L1 certification for HD streaming',
+' ',17499.00,15499.00,2000.00,100
+
+delete from Product where  ProductId=2 
+-------------------------------------------------ViewProductsByAdminOrCustomer-------------------------------------------------
+create procedure ViewProducts
+as
+begin
+select * from Product
+end
+
+exec ViewProducts
+---------------------------------------------------UpdateProductsByAdmin-----------------------------------------------------
+create procedure UpdateProduct(@Name varchar(30),@Rating decimal(2,1),
+@ManufactureDate date,@CartDescription varchar(100),@ShortDescription varchar(MAX),
+@Image varchar(100),@MRP decimal(10,2),
+@DealPrice decimal(10,2),
+@SavePrice decimal(10,2),@NoOfStock int)
+as
+begin
+update Product set Name=@Name,Rating=@Rating,ManufactureDate=@ManufactureDate,
+CartDescription=@CartDescription,ShortDescription=@ShortDescription,
+Image=@Image,MRP=@MRP,
+DealPrice=@DealPrice,SavePrice=@SavePrice,NoOfStock=@NoOfStock
+end
+
+exec UpdateProduct update Product set NoOfStock=23
+
+----------------------------------------------deleteAProduct by Admin-----------------------------------------------------
+create proc DeleteProduct(@ProductId int)
+as
+begin
+delete from Product where ProductId=@ProductId
+end
+---------------------------------------------insertBillingDetails----------------------------------------------------
+create proc InsertBillingDetails(@UserId int,
+@Address1 varchar(100),@Address2 varchar(100),@City varchar(20),@State varchar(30),@Pincode varchar(20))
+as
+begin
+insert into BillingDetails values(@UserId,@Address1,@Address2,@City,@State,@Pincode)
+end
+
+exec InsertBillingDetails 2,'xyz street',' ','Chennai','TamilNadu','600 001'
+------------------------------------------Update Biling Details---------------------------------------
+create procedure UpdateBillingDetails(@UserId int,@Address1 varchar(100),@Address2 varchar(100),@City varchar(20),@State varchar(30),@Pincode varchar(20))
+as
+begin
+update BillingDetails set UserId=@UserId,Address1=@Address1,
+Address2=@Address2,City=@City,State=@State,Pincode=@Pincode
+end
+
+exec InsertBillingDetails update BillingDetails set Address2='Abc colony'
+-----------------------------------------------Deleteif userIsNotactive by admin------------------------------------------
+create proc DeleteUserIfNotActive(@UserIsActive bit)
+as
+begin
+delete from Users where RoleId in (select RoleId from UserRoles where UserIsActive=0)
+end
+
+delete from Users where RoleId = 3
+---------------------------------------InsertIntoWishList--------------------------------------------------------------------
+create procedure InsertIntoWishList(@userId int,@ProductId int,@DateOfCartAdd date)
+as
+begin
+insert into WishList values (@userId,@ProductId,GETDATE())
+end
+exec InsertIntoWishList 2,1,''
+---------------------------------------ViewproductsOnWishList---------------------------------------------------------------
+alter procedure ViewProductsOnWishList(@userId int)
+as
+begin
+select * from Product product inner join WishList wishlist on product.ProductId=wishlist.ProductId and wishlist.UserId= @userId
+end
+
+exec ViewProductsOnWishList 2
+------------------------------------SearchProduct------------------------------------------------------------
+alter procedure SearchProduct(@ProductName varchar(30))
+as
+begin try
+select * from  Product where Name like '%'+@ProductName+'%' 
+end try
+begin catch
+
+Print 'No Search Results found :'
+SELECT ERROR_STATE() AS ErrorState , ERROR_MESSAGE() ErrorMsg ;  
+end catch 
+
+exec SearchProduct 'sa'
+exec SearchProduct 're'
+-----------------------------------drop payment and insert new payment-----------------------
+alter table payment
+add  CardNumber varchar(20),ExpiryDate date,CVV int,PaymentType varchar(20),PaymentStatus varchar(20),Amount decimal(15,2)
+
+alter table Payment 
+drop column PaymentMode
+alter table Payment
+alter column ExpiryDate date 
+select * from Payment
+
+exec sp_rename 'Payment.PaymentModeId', 'PaymentId','column'
+
+delete TOP(3) from Payment
+------------------------------------------------InsertPayment--------------------------------
+alter procedure MakePayment(@CardNumber varchar(20),@ExpiryDate date,@CVV int,@PaymentType varchar(20),
+@PaymentStatus varchar(20),@Amount decimal(15,2))
+as
+begin
+if(@PaymentType='CashOnDelivery')
+insert into Payment values('','','',@PaymentType,'',@Amount)
+else if(@PaymentType='CreditCard')
+insert into Payment values(@CardNumber,@ExpiryDate,@CVV,@PaymentType,'',@Amount)
+else if(@PaymentType='DebitCard')
+insert into Payment values(@CardNumber,@ExpiryDate,@CVV,@PaymentType,'',@Amount)
+end
+
+select * from Payment
+
+exec MakePayment '','',0,'CashOnDelivery','',20000.00
+
+delete top(3) from Payment
+
+exec MakePayment '4450820269090946','2040-03-03',495,'DebitCard','',20000.00
+----------------------------------------------InsertOrderDetails--------------------------------------------------------
+
+select * from OrderDetails
+select * from Payment
+
+alter table Payment drop column PaymentStatus
+
+create procedure InsertOrderDetails(@ProductId int,@UserId int,@OrderDate date,@Quantity int,@PaymentId int)
+as
+declare @item int,@Amount decimal(15,2)
+set @item=0
+begin
+IF EXISTS(select * from OrderDetails where ProductId=@ProductId and UserId=@UserId)
+begin
+select @item=(select Quantity from OrderDetails where ProductId=@ProductId and UserId=@UserId)
+select @item=@item+1
+select @Amount=(select DealPrice from Product where ProductId=@ProductId)
+update OrderDetails set Quantity=@item where PaymentId in(update Amount from Payment where Amount=@item*@Amount)
+end
+
+
