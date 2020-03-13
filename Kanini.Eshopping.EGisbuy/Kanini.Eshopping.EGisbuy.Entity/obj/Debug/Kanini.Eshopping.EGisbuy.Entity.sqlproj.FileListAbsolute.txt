@@ -1,0 +1,9 @@
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\bin\Debug\Kanini.Eshopping.EGisbuy.Entity.dacpac
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\obj\Debug\Kanini.Eshopping.EGisbuy.Entity.dll
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\obj\Debug\Kanini.Eshopping.EGisbuy.Entity.pdb
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\bin\Debug\Kanini.Eshopping.EGisbuy.Entity.dll
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\bin\Debug\Kanini.Eshopping.EGisbuy.Entity.pdb
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\obj\Debug\Model.xml
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\obj\Debug\refactor.xml
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\obj\Debug\postdeploy.sql
+C:\Users\Divhya.bharathy\source\repos\Kanini.Eshopping.EGisbuy\Kanini.Eshopping.EGisbuy.Entity\obj\Debug\predeploy.sql
